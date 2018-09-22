@@ -1,6 +1,6 @@
 class Number:
-    def __init__(self):
-        self.alpha = 'X'
+    def __init__(self, alpha):
+        self.alpha = alpha
         self.value = -1
 
     # Getter and Setter
@@ -18,4 +18,4 @@ class Number:
     
     # Check wether this object Number has been set with a value or not
     def isSetByValue(self):
-        return not(self.alpha == 'X')
+        return not(self.value == -1)
