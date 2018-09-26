@@ -1,4 +1,6 @@
 import copy
+from Number import Number
+import help
 
 class State:
     def __init__(self):
@@ -24,7 +26,7 @@ class State:
                 if (i < len(e)):
                     if (not e[i].isSetByValue()):
                         e[i].setValue(self.popRemaining(idx))
-                        break
+                        return 0
 
     # Return other childs of this state 
     # Child has one more than its parent which is assigned from remaining to list
@@ -40,3 +42,29 @@ class State:
             childs.append(child)
 
         return childs
+    
+    # Return maximum index i which satisfy the condition
+    # the condition: all element (list) in self.getList() at index i is input by value or len(list)-1 < levelDOne()
+    def levelDone(self):
+        level = -1
+        for e in self.getList()[-1]:
+            if e.isSetByValue():
+                level +=1
+        return level
+
+
+
+    # Return true if there is no rules break
+    def isGood(self):
+        listX = []
+        level = self.levelDone()
+        for li in self.getList():
+            if li[-1].isSetByValue() and li[1].getValue()==0:
+                return False
+
+            if len(li) <= level:
+                listX.append(li[:])
+            else:
+                listX.append(li[:level+1])
+        return help.isRight(listX)
+        
