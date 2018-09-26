@@ -16,16 +16,17 @@ class State:
         self.list = copy.deepcopy(input_list)
     def copyRemaining(self, input_list):
         self.remaining = copy.deepcopy(input_list)
-    def popRemaining(self, idx):
-        return self.remaining.pop(idx)
+    def removeRemaining(self, idx):
+        return self.remaining.remove(idx)
 
     # Assigning (with pop) value from self.remaining[idx]
     def assigning(self, idx):
-        for i in range(0, len(self.getList())):
+        for i in range(0, len(self.getList()[-1])):
             for e in self.getList():
                 if (i < len(e)):
                     if (not e[i].isSetByValue()):
-                        e[i].setValue(self.popRemaining(idx))
+                        e[i].setValue(idx)
+                        self.removeRemaining(idx)
                         return 0
 
     # Return other childs of this state 
@@ -33,7 +34,7 @@ class State:
     def childs(self):
         childs = []
         
-        for i in range(0, len(self.getRemaining())):
+        for i in self.getRemaining():
             child = State()
             child.copyList(self.getList())
             child.copyRemaining(self.getRemaining())
@@ -46,20 +47,25 @@ class State:
     # Return maximum index i which satisfy the condition
     # the condition: all element (list) in self.getList() at index i is input by value or len(list)-1 < levelDOne()
     def levelDone(self):
-        level = -1
-        for e in self.getList()[-1]:
-            if e.isSetByValue():
+        lili = []
+        level = 0
+        while level < len(self.getList()[-1]) and self.getList()[-1][level].isSetByValue():
+            level +=1
+        lili.append(level-1)
+        for li in self.getList():
+            level = 0
+            while level < len(li) and li[level].isSetByValue():
                 level +=1
-        return level
-
-
+            if not level == len(li):
+                lili.append(level-1)
+        return min(lili)
 
     # Return true if there is no rules break
     def isGood(self):
         listX = []
         level = self.levelDone()
         for li in self.getList():
-            if li[-1].isSetByValue() and li[1].getValue()==0:
+            if li[-1].isSetByValue() and li[-1].getValue()==0:
                 return False
 
             if len(li) <= level:

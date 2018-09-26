@@ -14,3 +14,17 @@ def isRight(listX):
         more = sum // 10
         sum = 0
     return True
+
+def solve(s):
+    if s.getList()[-1][-1].isSetByValue():
+        return [s]
+    else:
+        container = s.childs()
+        while len(container) > 0 and not container[0].levelDone()+1 == len(s.getList()[-1]):
+            temp = []
+            for e in container:
+                for a in e.childs():
+                    if a.isGood():
+                        temp.append(a)
+            container = temp
+        return container
